@@ -88,13 +88,4 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-Q_IMPORT_PLUGIN(IOSSensorPlugin)
-
-/*
-Todo:
-    - link in CoreMotion if contains(Qt, sensors)
-    - link in libqsensors_ios if contains(PLUGINS, qsensors_ios) eller kanskje automatisk hvis contains(QT, sensors)
-    - fjern behovet for Q_IMPORT_PLUGIN(IOSSensorPlugin)
-*/
-
 

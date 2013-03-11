@@ -6,11 +6,9 @@ TEMPLATE = app
 TARGET = SensorApp
 INCLUDEPATH += .
 QT += declarative widgets opengl sensors
-PLUGINS += qtsensors_ios
+QTPLUGIN += qtsensors_ios
 
 # Input
 SOURCES += main.cpp
 RESOURCES += main.qrc
 OTHER_FILES += main.qml ball.jpeg
-
-LIBS += -framework CoreMotion -L/Volumes/Code/qt-src/qt-50-ios/qtbase/plugins/sensors -lqtsensors_ios
