@@ -37,14 +37,13 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    Image {
         id: ball
-        color: "yellow"
+        source: "qrc:/ball.png"
         property real speedX: 0
         property real speedY: 0
         width: 50
         height: 50
-        radius: 50
         x: (mainWindow.width + width)/2
         y: (mainWindow.height + height)/2
     }
