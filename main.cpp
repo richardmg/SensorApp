@@ -81,8 +81,6 @@ int main(int argc, char **argv)
     
     view.setSource(QUrl("qrc:/main.qml"));
     view.setViewportUpdateMode(QDeclarativeView::FullViewportUpdate);
-    view.winId();
-    view.setGeometry(0, 0, 1024, 768);
     view.show();
 
     return app.exec();
