@@ -22,6 +22,7 @@ public:
     {
         connect(&m_sensor, &QAccelerometer::sensorError, &sensorError);
         connect(&m_sensor, &QAccelerometer::readingChanged, this, &QMLAccelerometer::readingChanged);
+        //m_sensor.setDataRate(2);
     }
 
     bool isActive()
@@ -75,6 +76,7 @@ class QMLGyroscope : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
+    Q_PROPERTY(quint64 timestamp READ timestamp)
     Q_PROPERTY(qreal x READ x NOTIFY xChanged)
     Q_PROPERTY(qreal y READ y NOTIFY yChanged)
     Q_PROPERTY(qreal z READ z NOTIFY zChanged)
@@ -84,6 +86,7 @@ public:
     {
         connect(&m_sensor, &QGyroscope::sensorError, &sensorError);
         connect(&m_sensor, &QGyroscope::readingChanged, this, &QMLGyroscope::readingChanged);
+        //m_sensor.setDataRate(10);
     }
 
     bool isActive()
@@ -102,6 +105,7 @@ public:
         emit activeChanged();
     }
 
+    quint64 timestamp() const { return m_timestamp; };
     qreal x() const { return m_x; };
     qreal y() const { return m_y; };
     qreal z() const { return m_z; };
@@ -112,10 +116,11 @@ signals:
     void yChanged();
     void zChanged();
 
-    private slots:
+private slots:
     void readingChanged()
     {
         QGyroscopeReading *r = m_sensor.reading();
+        m_timestamp = r->timestamp();
         m_x = r->x();
         m_y = r->y();
         m_z = r->z();
@@ -126,6 +131,7 @@ signals:
 
 private:
     QGyroscope m_sensor;
+    quint64 m_timestamp;
     qreal m_x;
     qreal m_y;
     qreal m_z;
@@ -139,7 +145,7 @@ int main(int argc, char **argv)
     app.primaryScreen()->setOrientationUpdateMask(Qt::PortraitOrientation);
     
     qmlRegisterType<QMLAccelerometer,1>("Sensors", 1, 0, "Accelerometer");
-    qmlRegisterType<QMLAccelerometer,1>("Sensors", 1, 0, "Gyroscope");
+    qmlRegisterType<QMLGyroscope,1>("Sensors", 1, 0, "Gyroscope");
 
     QDeclarativeView view;
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);

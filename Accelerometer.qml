@@ -3,38 +3,48 @@ import Sensors 1.0
 
 Rectangle {
     id: root
-    color: "black"
+    color: "white"
     anchors.fill: parent
 
-    property real resistance: 25
-    property real bounce: 1
-    property real accelerationMultiplier: 5
+    property real friction: 0.05
+    property real bounce: 0.6
+    property real gravity: 0.2
 
     Accelerometer {
         id: acc
         active: true
         onXChanged: {
-            ball.speedX -= (x/accelerationMultiplier) + (ball.speedX/resistance)
+            ball.speedX -= x * gravity
+            if (ball.speedX > 0)
+                ball.speedX = Math.max(0, ball.speedX - friction)
+            else
+                ball.speedX = Math.min(0, ball.speedX + friction)
             ball.x += ball.speedX
+
             if (ball.x < 0) {
                 ball.x = 0
-                ball.speedX = (ball.speedX * -1) / bounce
+                ball.speedX = ball.speedX * -1 * bounce
             }
             if (ball.x > root.width - ball.width) {
                 ball.x = root.width - ball.width
-                ball.speedX = (ball.speedX * -1) / bounce
+                ball.speedX = ball.speedX * -1 * bounce
             }
         }
         onYChanged: {
-            ball.speedY += (y/accelerationMultiplier) - (ball.speedY/resistance)
+            ball.speedY += y * gravity
+            if (ball.speedY > 0)
+                ball.speedY = Math.max(0, ball.speedY - friction)
+            else
+                ball.speedY = Math.min(0, ball.speedY + friction)
             ball.y += ball.speedY
+
             if (ball.y < 0) {
                 ball.y = 0
-                ball.speedY = (ball.speedY * -1) / bounce
+                ball.speedY = ball.speedY * -1 * bounce
             }
             if (ball.y > root.height - ball.height) {
                 ball.y = root.height - ball.height
-                ball.speedY = (ball.speedY * -1) / bounce
+                ball.speedY = ball.speedY * -1 * bounce
             }
         }
     }
@@ -44,16 +54,16 @@ Rectangle {
         source: "qrc:/ball.png"
         property real speedX: 0
         property real speedY: 0
-        width: 50
-        height: 50
-        x: (root.width + width)/2
-        y: (root.height + height)/2
+        width: 100
+        height: 100
+        x: (root.width - width)/2
+        y: (root.height - height)/2
     }
 
     Column {
-        Text { color: "white"; text: "x: " + acc.x }
-        Text { color: "white"; text: "y: " + acc.y }
-        Text { color: "white"; text: "z: " + acc.z }
+        Text { color: "gray"; text: "x: " + acc.x.toFixed(2) }
+        Text { color: "gray"; text: "y: " + acc.y.toFixed(2) }
+        Text { color: "gray"; text: "z: " + acc.z.toFixed(2) }
     }
 
     Row {

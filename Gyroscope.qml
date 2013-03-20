@@ -6,48 +6,26 @@ Rectangle {
     color: "black"
     anchors.fill: parent
 
-    property real resistance: 25
-    property real bounce: 1
-    property real accelerationMultiplier: 5
-
-    Accelerometer {
+    Gyroscope {
         id: acc
         active: true
+        property variant lastTime: 0
         onXChanged: {
-            ball.speedX -= (x/accelerationMultiplier) + (ball.speedX/resistance)
-            ball.x += ball.speedX
-            if (ball.x < 0) {
-                ball.x = 0
-                ball.speedX = (ball.speedX * -1) / bounce
-            }
-            if (ball.x > root.width - ball.width) {
-                ball.x = root.width - ball.width
-                ball.speedX = (ball.speedX * -1) / bounce
-            }
         }
         onYChanged: {
-            ball.speedY += (y/accelerationMultiplier) - (ball.speedY/resistance)
-            ball.y += ball.speedY
-            if (ball.y < 0) {
-                ball.y = 0
-                ball.speedY = (ball.speedY * -1) / bounce
-            }
-            if (ball.y > root.height - ball.height) {
-                ball.y = root.height - ball.height
-                ball.speedY = (ball.speedY * -1) / bounce
-            }
+        }
+        onZChanged: {
+            var timeDiff = timestamp - lastTime
+            lastTime = timestamp
+            arrow.rotation += z * (timeDiff/1000000)
         }
     }
 
     Image {
-        id: ball
-        source: "qrc:/ball.png"
-        property real speedX: 0
-        property real speedY: 0
-        width: 50
-        height: 50
-        x: (root.width + width)/2
-        y: (root.height + height)/2
+        id: arrow
+        source: "qrc:/arrow.png"
+        x: (root.width - width)/2
+        y: (root.height - height)/2
     }
 
     Column {
@@ -58,19 +36,20 @@ Rectangle {
 
     Row {
         x: 300
+        property real scale: 1
         Rectangle {
             width: 50
-            height: Math.abs(acc.x * 10)
+            height: Math.abs(acc.x * scale)
             color: acc.x > 0 ? "green" : "red"
         }
         Rectangle {
             width: 50
-            height: Math.abs(acc.y * 10)
+            height: Math.abs(acc.y * scale)
             color: acc.y > 0 ? "green" : "red"
         }
         Rectangle {
             width: 50
-            height: Math.abs(acc.z * 10)
+            height: Math.abs(acc.z * scale)
             color: acc.z > 0 ? "green" : "red"
         }
     }

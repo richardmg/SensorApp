@@ -5,6 +5,7 @@
         <file>Accelerometer.qml</file>
         <file>Gyroscope.qml</file>
         <file>ball.png</file>
+        <file>arrow.png</file>
     </qresource>
 </RCC>
 
