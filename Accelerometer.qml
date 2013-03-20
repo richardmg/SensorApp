@@ -10,7 +10,7 @@ Rectangle {
     property real bounce: 0.6
     property real gravity: 0.2
 
-    Accelerometer {
+    Magnetometer {
         id: acc
         active: true
         onXChanged: {

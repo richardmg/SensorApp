@@ -6,7 +6,7 @@ Rectangle {
     color: "white"
     anchors.fill: parent
 
-    Gyroscope {
+    Magnetometer {
         id: acc
         active: true
         property variant lastTime: 0
@@ -15,9 +15,7 @@ Rectangle {
         onYChanged: {
         }
         onZChanged: {
-            var timeDiff = timestamp - lastTime
-            lastTime = timestamp
-            arrow.rotation += z * (timeDiff/1000000)
+            arrow.rotation = z
         }
     }
 
