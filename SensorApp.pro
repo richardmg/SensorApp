@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = SensorApp
+TARGET = QtSensors
 INCLUDEPATH += .
 QT += declarative widgets opengl sensors
 QTPLUGIN += qtsensors_ios

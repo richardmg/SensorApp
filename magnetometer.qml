@@ -7,15 +7,14 @@ Rectangle {
     anchors.fill: parent
 
     Magnetometer {
-        id: acc
+        id: mag
         active: true
-        property variant lastTime: 0
         onXChanged: {
         }
         onYChanged: {
         }
         onZChanged: {
-            arrow.rotation = z
+            arrow.rotation = z/1000000
         }
     }
 
@@ -27,9 +26,9 @@ Rectangle {
     }
 
     Column {
-        Text { color: "gray"; text: "x: " + acc.x.toFixed(2) }
-        Text { color: "gray"; text: "y: " + acc.y.toFixed(2) }
-        Text { color: "gray"; text: "z: " + acc.z.toFixed(2) }
+        Text { color: "gray"; text: "x: " + mag.x.toFixed(2) }
+        Text { color: "gray"; text: "y: " + mag.y.toFixed(2) }
+        Text { color: "gray"; text: "z: " + mag.z.toFixed(2) }
     }
 
     Row {
@@ -37,18 +36,18 @@ Rectangle {
         property real scale: 1
         Rectangle {
             width: 50
-            height: Math.abs(acc.x * scale)
-            color: acc.x > 0 ? "green" : "red"
+            height: Math.abs(mag.x * scale)
+            color: mag.x > 0 ? "green" : "red"
         }
         Rectangle {
             width: 50
-            height: Math.abs(acc.y * scale)
-            color: acc.y > 0 ? "green" : "red"
+            height: Math.abs(mag.y * scale)
+            color: mag.y > 0 ? "green" : "red"
         }
         Rectangle {
             width: 50
-            height: Math.abs(acc.z * scale)
-            color: acc.z > 0 ? "green" : "red"
+            height: Math.abs(mag.z * scale)
+            color: mag.z > 0 ? "green" : "red"
         }
     }
     

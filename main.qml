@@ -8,28 +8,29 @@ Rectangle {
         id: loader
         width: mainWindow.width
         height: mainWindow.height
-//        anchors.top: mainWindow.top
-//        anchors.bottom: buttonRow.top
+        anchors.top: mainWindow.top
+        anchors.bottom: buttonRow.top
         source: "qrc:/Accelerometer.qml"
-        //source: "qrc:/Gyroscope.qml"
     }
-//    Row {
-//        id: buttonRow
-//        width: mainWindow.width
-//        height: 50
-//        anchors.bottom: mainWindow.bottom
-//
-//        Button {
-//            text: "Accelerometer"
-//            onClicked: loader.source = "qrc:/Accelerometer.qml"
-//        }
-//        Button {
-//            text: "Gyroscope"
-//            onClicked: loader.source = "qrc:/Gyroscope.qml"
-//        }
-//    }
-//        Button {
-//            text: "Foo"
-//            onClicked: loader.source = "qrc:/Gyroscope.qml"
-//        }
+    Row {
+        id: buttonRow
+        width: mainWindow.width
+        height: 50
+        x: 2
+        spacing: 2
+        anchors.bottom: mainWindow.bottom
+
+        Button {
+            text: "Accelerometer"
+            onClicked: loader.source = "qrc:/Accelerometer.qml"
+        }
+        Button {
+            text: "Gyroscope"
+            onClicked: loader.source = "qrc:/Gyroscope.qml"
+        }
+        Button {
+            text: "Magnetometer"
+            onClicked: loader.source = "qrc:/Magnetometer.qml"
+        }
+    }
 }
