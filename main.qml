@@ -10,6 +10,7 @@ Rectangle {
         height: mainWindow.height
         anchors.top: mainWindow.top
         anchors.bottom: buttonRow.top
+        anchors.bottomMargin: 2
         source: "qrc:/Accelerometer.qml"
     }
     Row {

@@ -153,7 +153,7 @@ public:
     {
         connect(&m_sensor, &QMagnetometer::sensorError, &sensorError);
         connect(&m_sensor, &QMagnetometer::readingChanged, this, &QMLMagnetometer::readingChanged);
-        //m_sensor.setDataRate(10);
+        m_sensor.setDataRate(10);
     }
 
     bool isActive()
@@ -210,14 +210,14 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     app.primaryScreen()->setOrientationUpdateMask(Qt::PortraitOrientation);
-    
+
     qmlRegisterType<QMLAccelerometer,1>("Sensors", 1, 0, "Accelerometer");
     qmlRegisterType<QMLGyroscope,1>("Sensors", 1, 0, "Gyroscope");
     qmlRegisterType<QMLMagnetometer,1>("Sensors", 1, 0, "Magnetometer");
 
     QDeclarativeView view;
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    
+
     view.setSource(QUrl("qrc:/main.qml"));
     view.setViewportUpdateMode(QDeclarativeView::FullViewportUpdate);
     view.show();

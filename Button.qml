@@ -7,6 +7,7 @@ Rectangle {
 
     width: label.width + 20
     height: label.height + 20
+    radius: 2
 
     color: "green"
 

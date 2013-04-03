@@ -5,17 +5,28 @@ Rectangle {
     id: root
     color: "white"
     anchors.fill: parent
+    property real compassRotation: 0
+
+    function updateCompass()
+    {
+        var dx = mag.microtesla.x
+        var dy = mag.microtesla.y
+        var dz = mag.microtesla.z
+        //length = Math.sqrt((dx * dx) + (dy * dy))
+        compassRotation = (Math.atan2(mag.x, mag.y) / Math.PI) * 180
+    }
 
     Magnetometer {
         id: mag
+        property variant microtesla: {
+            x: mag.x * 1000000,
+            y: mag.y * 1000000,
+            z: mag.z * 1000000
+        }
+
         active: true
-        onXChanged: {
-        }
-        onYChanged: {
-        }
-        onZChanged: {
-            arrow.rotation = z/1000000
-        }
+        onXChanged: updateCompass()
+        onYChanged: updateCompass()
     }
 
     Image {
@@ -23,12 +34,14 @@ Rectangle {
         source: "qrc:/arrow.png"
         x: (root.width - width)/2
         y: (root.height - height)/2
+        rotation: compassRotation
     }
 
     Column {
-        Text { color: "gray"; text: "x: " + mag.x.toFixed(2) }
-        Text { color: "gray"; text: "y: " + mag.y.toFixed(2) }
-        Text { color: "gray"; text: "z: " + mag.z.toFixed(2) }
+        Text { color: "gray"; text: "x: " + mag.microtesla.x.toFixed(2) }
+        Text { color: "gray"; text: "y: " + mag.microtesla.y.toFixed(2) }
+        Text { color: "gray"; text: "z: " + mag.microtesla.z.toFixed(2) }
+        Text { color: "gray"; text: "compassRotation: " + compassRotation }
     }
 
     Row {
