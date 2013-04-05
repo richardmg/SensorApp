@@ -40,7 +40,7 @@ Rectangle {
         Text { color: "gray"; text: "z: " + mag.microtesla.z.toFixed(2) }
         Text { color: "gray"; text: "r: " + arraowRotation.toFixed(2) }
         Button {
-            text: mag.returnGeoValues ? "Use raw values" : "Use geo values"
+            text: mag.returnGeoValues ? "Use raw values" : "Use geo calibrated values"
             onClicked: mag.returnGeoValues = !mag.returnGeoValues
         }
     }
