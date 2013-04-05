@@ -7,9 +7,9 @@ Rectangle {
 
     width: label.width + 20
     height: label.height + 20
-    radius: 2
+    radius: 4
 
-    color: "green"
+    color: "lightgray"
 
     Text {
         id: label

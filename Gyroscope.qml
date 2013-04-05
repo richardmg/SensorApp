@@ -6,6 +6,13 @@ Rectangle {
     color: "white"
     anchors.fill: parent
 
+    function resetArrows()
+    {
+        arrowX.angle = 0
+        arrowY.angle = 0
+        arrowZ.rotation = 0
+    }
+
     Gyroscope {
         id: acc
         active: true
@@ -17,55 +24,20 @@ Rectangle {
             var timeDiff = timestamp - lastTimeX
             lastTimeX = timestamp
             var normalized = x * (timeDiff/1000000)
-            normalizedX.angle += normalized
-            rotX.angle += normalized * Math.cos((rotZ.angle * Math.PI) / 180)
+            arrowX.angle += normalized
         }
         onYChanged: {
             var timeDiff = timestamp - lastTimeY
             lastTimeY = timestamp
             var normalized = y * (timeDiff/1000000)
-            normalizedY.angle += normalized
-            rotX.angle += normalized * -Math.sin((rotZ.angle * Math.PI) / 180)
-            rotZ.angle += normalized * Math.sin((rotX.angle * Math.PI) / 180)
+            arrowY.angle -= normalized
         }
         onZChanged: {
             var timeDiff = timestamp - lastTimeZ
             lastTimeZ = timestamp
             var normalized = z * (timeDiff/1000000)
-            normalizedZ.angle += normalized
-            rotZ.angle += normalized
+            arrowZ.rotation += normalized
         }
-    }
-
-    Image {
-        id: arrow
-        source: "qrc:/arrow.png"
-        x: ((root.width - width) / 2) + (width / 2)
-        y: ((root.height - height) / 2) + (height / 2)
-        transform: [
-            Translate {
-                x: -arrow.width / 2
-                y: -arrow.height / 2
-            },
-            Rotation {
-                id: rotX
-                axis.x: 1
-                axis.y: 0
-                axis.z: 0
-            },
-            Rotation {
-                id: rotZ
-                axis.x: 0
-                axis.y: 0
-                axis.z: 1
-            },
-            Rotation {
-                id: rotY
-                axis.x: 0
-                axis.y: 1
-                axis.z: 0
-            }
-        ]
     }
 
     Column {
@@ -74,71 +46,69 @@ Rectangle {
         Text { color: "gray"; text: "z: " + acc.z.toFixed(2) }
         Button {
             text: "Reset"
-            color: "gray"
-            onClicked: {
-                normalizedX.angle = normalizedY.angle = normalizedZ.angle = 0
-                rotX.angle = rotY.angle = rotZ.angle = 0
-            }
+            onClicked: resetArrows()
         }
     }
 
-    Row {
-        id:smallArrows
-        anchors.horizontalCenter: parent.horizontalCenter
-        property int arrowSize: 60
-        y: arrowSize
-        width: childrenRect.width
-        height: arrowSize
+    Timer {
+        interval: 500
+        running: true
+        onTriggered: resetArrows()
+    }
+
+    Column {
+        anchors.centerIn: parent
         Image {
-            width: smallArrows.arrowSize
-            height: smallArrows.arrowSize
+            id: imageX
             source: "qrc:/arrow.png"
+            width: sourceSize.width / 2
+            height: sourceSize.height / 2
             transform: [
                 Translate {
-                    x: -smallArrows.arrowSize / 2
-                    y: -smallArrows.arrowSize / 2
+                    y: -imageX.sourceSize.height / 4
                 },
                 Rotation {
-                    id: normalizedX
+                    id: arrowX
                     axis.x: 1
                     axis.y: 0
                     axis.z: 0
+                    angle: 0
                 }
             ]
         }
+
         Image {
+            id: imageY
             source: "qrc:/arrow.png"
-            width: smallArrows.arrowSize
-            height: smallArrows.arrowSize
+            width: sourceSize.width / 2
+            height: sourceSize.height / 2
             transform: [
                 Translate {
-                    x: -smallArrows.arrowSize / 2
-                    y: -smallArrows.arrowSize / 2
+                    x: -imageY.sourceSize.height / 4
+                    y: -imageY.sourceSize.height / 4
                 },
                 Rotation {
-                    id: normalizedY
-                    axis.x: 0
-                    axis.y: 1
-                    axis.z: 0
-                }
-            ]
-        }
-        Image {
-            source: "qrc:/arrow.png"
-            width: smallArrows.arrowSize
-            height: smallArrows.arrowSize
-            transform: [
-                Translate {
-                    x: -smallArrows.arrowSize / 2
-                    y: -smallArrows.arrowSize / 2
-                },
-                Rotation {
-                    id: normalizedZ
                     axis.x: 0
                     axis.y: 0
                     axis.z: 1
+                    angle: -90
+                },
+                Rotation {
+                    id: arrowY
+                    axis.x: 0
+                    axis.y: 1
+                    axis.z: 0
+                    angle: 0
                 }
             ]
+        }
+
+        Image {
+            id: arrowZ
+            source: "qrc:/arrow.png"
+            width: sourceSize.width / 2
+            height: sourceSize.height / 2
+            rotation: 0
         }
     }
     

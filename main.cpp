@@ -147,13 +147,30 @@ class QMLMagnetometer : public QObject
     Q_PROPERTY(qreal x READ x NOTIFY xChanged)
     Q_PROPERTY(qreal y READ y NOTIFY yChanged)
     Q_PROPERTY(qreal z READ z NOTIFY zChanged)
+    Q_PROPERTY(bool returnGeoValues READ returnGeoValues WRITE setReturnGeoValues NOTIFY returnGeoValuesChanged)
+
 
 public:
     QMLMagnetometer() : m_x(0), m_y(0), m_z(0)
     {
         connect(&m_sensor, &QMagnetometer::sensorError, &sensorError);
         connect(&m_sensor, &QMagnetometer::readingChanged, this, &QMLMagnetometer::readingChanged);
-        m_sensor.setDataRate(10);
+//        m_sensor.setDataRate(10);
+    }
+
+    bool returnGeoValues() const
+    {
+        return m_sensor.returnGeoValues();
+    }
+
+    void setReturnGeoValues(bool geo)
+    {
+        if (geo == returnGeoValues())
+            return;
+        m_sensor.setReturnGeoValues(geo);
+        m_sensor.stop();
+        m_sensor.start();
+        emit returnGeoValuesChanged(geo);
     }
 
     bool isActive()
@@ -182,6 +199,7 @@ signals:
     void xChanged();
     void yChanged();
     void zChanged();
+    void returnGeoValuesChanged(bool returnGeoValues);
 
     private slots:
     void readingChanged()
