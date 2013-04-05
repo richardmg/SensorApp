@@ -7,7 +7,7 @@ Rectangle {
     anchors.fill: parent
     property real arraowRotation: 0
 
-    function updatearraow()
+    function updatearrow()
     {
         arraowRotation = ((Math.atan2(mag.x, mag.y) / Math.PI) * 180)
     }
@@ -22,8 +22,8 @@ Rectangle {
 
         returnGeoValues: false
         active: true
-        onXChanged: updatearraow()
-        onYChanged: updatearraow()
+        onXChanged: updatearrow()
+        onYChanged: updatearrow()
     }
 
     Image {
