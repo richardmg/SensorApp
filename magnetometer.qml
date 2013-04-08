@@ -28,7 +28,7 @@ Rectangle {
 
     Image {
         id: arrow
-        source: "qrc:/arrow.png"
+        source: "qrc:/magnet.png"
         x: (root.width - width)/2
         y: (root.height - height)/2
         rotation: arraowRotation

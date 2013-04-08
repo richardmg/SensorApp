@@ -5,8 +5,11 @@
         <file>Accelerometer.qml</file>
         <file>Gyroscope.qml</file>
         <file>Magnetometer.qml</file>
+        <file>Compass.qml</file>
         <file>ball.png</file>
         <file>arrow.png</file>
+        <file>compass.png</file>
+        <file>magnet.png</file>
     </qresource>
 </RCC>
 

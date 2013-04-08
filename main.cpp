@@ -222,6 +222,66 @@ private:
     qreal m_z;
 };
 
+// Compass ///////////////////////////
+
+class QMLCompass : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
+    Q_PROPERTY(quint64 timestamp READ timestamp)
+    Q_PROPERTY(qreal azimuth READ azimuth NOTIFY azimuthChanged)
+    Q_PROPERTY(qreal calibrationLevel READ calibrationLevel NOTIFY calibrationLevelChanged)
+
+public:
+    QMLCompass() : m_azimuth(0), m_calibrationLevel(0)
+    {
+        connect(&m_sensor, &QCompass::sensorError, &sensorError);
+        connect(&m_sensor, &QCompass::readingChanged, this, &QMLCompass::readingChanged);
+    }
+
+    bool isActive()
+    {
+        return m_sensor.isActive();
+    }
+
+    void setActive(bool active)
+    {
+        if (active == m_sensor.isActive())
+            return;
+        if (active)
+            m_sensor.start();
+        else
+            m_sensor.stop();
+        emit activeChanged();
+    }
+
+    quint64 timestamp() const { return m_timestamp; };
+    qreal azimuth() const { return m_azimuth; };
+    qreal calibrationLevel() const { return m_calibrationLevel; };
+
+signals:
+    void activeChanged();
+    void azimuthChanged();
+    void calibrationLevelChanged();
+
+    private slots:
+    void readingChanged()
+    {
+        QCompassReading *r = m_sensor.reading();
+        m_timestamp = r->timestamp();
+        m_azimuth = r->azimuth();
+        m_calibrationLevel = r->calibrationLevel();
+        emit azimuthChanged();
+        emit calibrationLevelChanged();
+    }
+
+private:
+    QCompass m_sensor;
+    quint64 m_timestamp;
+    qreal m_azimuth;
+    qreal m_calibrationLevel;
+};
+
 #include "main.moc"
 
 int main(int argc, char **argv)
@@ -232,6 +292,7 @@ int main(int argc, char **argv)
     qmlRegisterType<QMLAccelerometer,1>("Sensors", 1, 0, "Accelerometer");
     qmlRegisterType<QMLGyroscope,1>("Sensors", 1, 0, "Gyroscope");
     qmlRegisterType<QMLMagnetometer,1>("Sensors", 1, 0, "Magnetometer");
+    qmlRegisterType<QMLCompass,1>("Sensors", 1, 0, "Compass");
 
     QDeclarativeView view;
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);

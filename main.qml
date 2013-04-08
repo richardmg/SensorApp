@@ -33,5 +33,9 @@ Rectangle {
             text: "Magnetometer"
             onClicked: loader.source = "qrc:/Magnetometer.qml"
         }
+        Button {
+            text: "Compass"
+            onClicked: loader.source = "qrc:/Compass.qml"
+        }
     }
 }
