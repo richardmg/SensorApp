@@ -282,7 +282,75 @@ private:
     qreal m_calibrationLevel;
 };
 
+// Proximity ///////////////////////////
+
+class QMLProximitySensor : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
+    Q_PROPERTY(quint64 timestamp READ timestamp)
+    Q_PROPERTY(qreal close READ close NOTIFY closeChanged)
+    Q_PROPERTY(bool available READ isAvailable NOTIFY availableChanged)
+
+public:
+    QMLProximitySensor() : m_close(false), m_available(true)
+    {
+        connect(&m_sensor, &QProximitySensor::sensorError, &sensorError);
+        connect(&m_sensor, &QProximitySensor::readingChanged, this, &QMLProximitySensor::readingChanged);
+        if (!m_sensor.connectToBackend()) {
+            m_available = false;
+            qDebug() << "setting available to false";
+            emit availableChanged();
+        }
+    }
+
+    bool isAvailable()
+    {
+        return m_available;
+    }
+
+    bool isActive()
+    {
+        return m_sensor.isActive();
+    }
+
+    void setActive(bool active)
+    {
+        if (active == m_sensor.isActive())
+            return;
+        if (active)
+            m_sensor.start();
+        else
+            m_sensor.stop();
+        emit activeChanged();
+    }
+
+    quint64 timestamp() const { return m_timestamp; };
+    qreal close() const { return m_close; };
+
+signals:
+    void activeChanged();
+    void closeChanged();
+    void availableChanged();
+
+    private slots:
+    void readingChanged()
+    {
+        QProximityReading *r = m_sensor.reading();
+        m_timestamp = r->timestamp();
+        m_close = r->close();
+        emit closeChanged();
+    }
+
+private:
+    QProximitySensor m_sensor;
+    quint64 m_timestamp;
+    bool m_close;
+    bool m_available;
+};
+
 #include "main.moc"
+
 
 int main(int argc, char **argv)
 {
@@ -293,6 +361,7 @@ int main(int argc, char **argv)
     qmlRegisterType<QMLGyroscope,1>("Sensors", 1, 0, "Gyroscope");
     qmlRegisterType<QMLMagnetometer,1>("Sensors", 1, 0, "Magnetometer");
     qmlRegisterType<QMLCompass,1>("Sensors", 1, 0, "Compass");
+    qmlRegisterType<QMLProximitySensor,1>("Sensors", 1, 0, "ProximitySensor");
 
     QDeclarativeView view;
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);

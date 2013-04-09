@@ -37,5 +37,9 @@ Rectangle {
             text: "Compass"
             onClicked: loader.source = "qrc:/Compass.qml"
         }
+        Button {
+            text: "Proximity"
+            onClicked: loader.source = "qrc:/Proximity.qml"
+        }
     }
 }
