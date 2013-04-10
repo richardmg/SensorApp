@@ -7,6 +7,7 @@
         <file>Magnetometer.qml</file>
         <file>Compass.qml</file>
         <file>Proximity.qml</file>
+        <file>TiltSensor.qml</file>
         <file>ball.png</file>
         <file>arrow.png</file>
         <file>compass.png</file>

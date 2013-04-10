@@ -41,5 +41,9 @@ Rectangle {
             text: "Proximity"
             onClicked: loader.source = "qrc:/Proximity.qml"
         }
+        Button {
+            text: "Tilt"
+            onClicked: loader.source = "qrc:/TiltSensor.qml"
+        }
     }
 }

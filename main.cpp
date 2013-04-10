@@ -299,7 +299,6 @@ public:
         connect(&m_sensor, &QProximitySensor::readingChanged, this, &QMLProximitySensor::readingChanged);
         if (!m_sensor.connectToBackend()) {
             m_available = false;
-            qDebug() << "setting available to false";
             emit availableChanged();
         }
     }
@@ -349,8 +348,64 @@ private:
     bool m_available;
 };
 
-#include "main.moc"
+// Tilt sensor ///////////////////////////
 
+class QMLTiltSensor : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
+    Q_PROPERTY(qreal x READ x NOTIFY xChanged)
+    Q_PROPERTY(qreal y READ y NOTIFY yChanged)
+
+public:
+    QMLTiltSensor() : m_x(0), m_y(0)
+    {
+        connect(&m_sensor, &QTiltSensor::sensorError, &sensorError);
+        connect(&m_sensor, &QTiltSensor::readingChanged, this, &QMLTiltSensor::readingChanged);
+        //m_sensor.setDataRate(2);
+    }
+
+    bool isActive()
+    {
+        return m_sensor.isActive();
+    }
+
+    void setActive(bool active)
+    {
+        if (active == m_sensor.isActive())
+            return;
+        if (active)
+            m_sensor.start();
+        else
+            m_sensor.stop();
+        emit activeChanged();
+    }
+
+    qreal x() const { return m_x; };
+    qreal y() const { return m_y; };
+
+signals:
+    void activeChanged();
+    void xChanged();
+    void yChanged();
+
+private slots:
+    void readingChanged()
+    {
+        QTiltReading *r = m_sensor.reading();
+        m_x = r->xRotation();
+        m_y = r->yRotation();
+        emit xChanged();
+        emit yChanged();
+    }
+
+private:
+    QTiltSensor m_sensor;
+    qreal m_x;
+    qreal m_y;
+};
+
+#include "main.moc"
 
 int main(int argc, char **argv)
 {
@@ -362,6 +417,7 @@ int main(int argc, char **argv)
     qmlRegisterType<QMLMagnetometer,1>("Sensors", 1, 0, "Magnetometer");
     qmlRegisterType<QMLCompass,1>("Sensors", 1, 0, "Compass");
     qmlRegisterType<QMLProximitySensor,1>("Sensors", 1, 0, "ProximitySensor");
+    qmlRegisterType<QMLTiltSensor,1>("Sensors", 1, 0, "TiltSensor");
 
     QDeclarativeView view;
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
